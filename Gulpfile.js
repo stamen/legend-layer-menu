@@ -1,10 +1,11 @@
-var gulp           = require('gulp'),
-    watch          = require('gulp-watch'),
-    rename         = require('gulp-rename'),
-    copy           = require('gulp-copy'),
-    jshint         = require('gulp-jshint'),
-    uglify         = require('gulp-uglify'),
-    sourcemaps     = require('gulp-sourcemaps');
+var gulp       = require('gulp'),
+    watch      = require('gulp-watch'),
+    rename     = require('gulp-rename'),
+    copy       = require('gulp-copy'),
+    jshint     = require('gulp-jshint'),
+    uglify     = require('gulp-uglify'),
+    sourcemaps = require('gulp-sourcemaps'),
+    wrap       = require('gulp-wrap-amd');
 
 var paths = {
   js        : './src/*.js',
@@ -30,6 +31,10 @@ gulp.task('uglify', function() {
 
   gulp.src(paths.js)
   .pipe(sourcemaps.init())
+  .pipe(wrap({
+    deps: ['require','module','exports'],
+    params: ['require','module','exports']
+  }))
   .pipe(uglify({
     mangle: true,
     output: {

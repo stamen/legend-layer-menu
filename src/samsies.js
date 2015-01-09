@@ -44,4 +44,45 @@ module.exports = function() {
       listeners[type] = listeners[type].filter(function(p) {return !p[3];});
     }
   };
+
+  //
+  // Gets a value by key
+  //
+  that.prototype.get = function get(key) {
+
+    that.fire("get:" + key, {
+      "value" : data[key]
+    });
+
+    that.fire("get", {
+      "value" : data[key],
+      "key"   : key
+    });
+
+    return data[key];
+
+  };
+
+  //
+  // Sets a value by key
+  //
+  that.prototype.get = function get(key, value) {
+
+    var old = data[key];
+
+    data[key] = value;
+
+    that.fire("set:" + key, {
+      "value" : data[key]
+    });
+
+    that.fire("set", {
+      "value"    : data[key],
+      "oldValue" : old,
+      "key"      : key
+    });
+
+    return data[key];
+
+  };
 };
