@@ -1,0 +1,24 @@
+{
+  "name": "samesies",
+  "version": "0.0.0",
+  "description": "A simple mix-in with common interface components",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/standardpixel/samesies.git"
+  },
+  "keywords": [
+    "interface",
+    "client",
+    "server"
+  ],
+  "author": "eric@standardpixel.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/standardpixel/samesies/issues"
+  },
+  "homepage": "https://github.com/standardpixel/samesies"
+}
