@@ -1,4 +1,4 @@
-# samesies
+# samesies [![Build Status](https://travis-ci.org/standardpixel/samesies.svg?branch=master)](https://travis-ci.org/standardpixel/samesies)
 Adds common interface elements on existing constructors and objects. This interface includes an event facade as well as data setters and getters.
 
 Methods
