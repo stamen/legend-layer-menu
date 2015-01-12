@@ -1,0 +1,22 @@
+{
+  "name": "samesies",
+  "main": "./dist/samsies.min.js",
+  "version": "0.0.0",
+  "homepage": "https://github.com/standardpixel/samesies",
+  "authors": [
+    "eric@standardpixel.com"
+  ],
+  "description": "A simple mix-in with common interface components",
+  "keywords": [
+    "interface",
+    "events"
+  ],
+  "license": "ISC",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
