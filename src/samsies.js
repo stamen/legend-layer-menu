@@ -1,38 +1,34 @@
 "use strict";
 
-module.exports = function() {
-  var that = this;
+var listeners = {},
+    data      = {};
 
-  var listeners = {},
-      data      = {};
+var interfaceMethods = {
 
-  //
-  // Subscribes a function to an event called by fire
-  //
-  that.prototype.on = function on(type, callback, data, once) {
+  "on" : function on(type, callback, data, once) {
     if (!listeners[type]) {
       listeners[type] = [];
     }
 
     listeners[type].push(arguments);
-  };
+  },
 
   //
   // Just like on but it unsubscribes after one fire
   //
-  that.prototype.once = function once(type, callback, data) {
+  "once" : function once(type, callback, data) {
     return that.on.apply(that, [
       arguments[0],
       arguments[1],
       arguments[2],
       true
     ]);
-  };
+  },
 
   //
   // Fire an event and run all subscribers
   //
-  that.prototype.fire = function fire(type, data) {
+  "fire" : function fire(type, data) {
     if(listeners[type]) {
       listeners[type].forEach(function(listener) {
         listener[1]({
@@ -43,12 +39,12 @@ module.exports = function() {
 
       listeners[type] = listeners[type].filter(function(p) {return !p[3];});
     }
-  };
+  },
 
   //
   // Gets a value by key
   //
-  that.prototype.get = function get(key) {
+  "get" : function get(key) {
 
     that.fire("get:" + key, {
       "value" : data[key]
@@ -61,12 +57,12 @@ module.exports = function() {
 
     return data[key];
 
-  };
+  },
 
   //
   // Sets a value by key
   //
-  that.prototype.get = function get(key, value) {
+  "set" : function get(key, value) {
 
     var old = data[key];
 
@@ -84,5 +80,23 @@ module.exports = function() {
 
     return data[key];
 
-  };
+  }
 };
+
+module.exports = {
+  "mix" : function (object) {
+    for (var i in interfaceMethods) {
+      object[i] = interfaceMethods[i];
+    }
+
+    return object;
+  },
+  "extend" : function (instance) {
+
+    for (var i in interfaceMethods) {
+      instance.prototype[i] = interfaceMethods[i];
+    }
+
+    return instance;
+  }
+}
