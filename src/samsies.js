@@ -100,3 +100,5 @@ module.exports = {
     return instance;
   }
 };
+
+return module.exports;
