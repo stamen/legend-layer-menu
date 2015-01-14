@@ -5,11 +5,10 @@ var gulp       = require('gulp'),
     jshint     = require('gulp-jshint'),
     uglify     = require('gulp-uglify'),
     sourcemaps = require('gulp-sourcemaps'),
-    wrap       = require('gulp-wrap-amd');
+    wrap       = require('gulp-wrap');
 
 var paths = {
   js        : './src/*.js',
-  publicJs  : './',
   dist      : './dist'
 };
 
@@ -31,16 +30,8 @@ gulp.task('uglify', function() {
 
   gulp.src(paths.js)
   .pipe(sourcemaps.init())
-  .pipe(wrap({
-    deps: ['require','module','exports'],
-    params: ['require','module','exports']
-  }))
-  .pipe(uglify({
-    mangle: true,
-    output: {
-      beautify: false
-    }
-  }))
+  .pipe(wrap("require([\"require\",\"module\",\"exports\"], function(require,module,exports) {<%= contents %>});"))
+  .pipe(uglify())
   .pipe(rename({extname: ".min.js"}))
   .pipe(sourcemaps.write("./")) //Write a sourcemap for browser debugging
   .pipe(gulp.dest(paths.dist))

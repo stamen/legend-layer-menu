@@ -17,7 +17,7 @@ var interfaceMethods = {
   // Just like on but it unsubscribes after one fire
   //
   "once" : function once(type, callback, data) {
-    return that.on.apply(that, [
+    return this.on.apply(this, [
       arguments[0],
       arguments[1],
       arguments[2],
@@ -46,11 +46,11 @@ var interfaceMethods = {
   //
   "get" : function get(key) {
 
-    that.fire("get:" + key, {
+    this.fire("get:" + key, {
       "value" : data[key]
     });
 
-    that.fire("get", {
+    this.fire("get", {
       "value" : data[key],
       "key"   : key
     });
@@ -68,11 +68,11 @@ var interfaceMethods = {
 
     data[key] = value;
 
-    that.fire("set:" + key, {
+    this.fire("set:" + key, {
       "value" : data[key]
     });
 
-    that.fire("set", {
+    this.fire("set", {
       "value"    : data[key],
       "oldValue" : old,
       "key"      : key
@@ -99,4 +99,4 @@ module.exports = {
 
     return instance;
   }
-}
+};
