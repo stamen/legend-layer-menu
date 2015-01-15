@@ -83,7 +83,7 @@ var interfaceMethods = {
   }
 };
 
-module.exports = {
+var outs = {
   "mix" : function (object) {
     for (var i in interfaceMethods) {
       object[i] = interfaceMethods[i];
@@ -100,3 +100,7 @@ module.exports = {
     return instance;
   }
 };
+
+module.exports = outs;
+
+return outs;
