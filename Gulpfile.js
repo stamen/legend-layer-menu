@@ -30,7 +30,7 @@ gulp.task('uglify', function() {
 
   gulp.src(paths.js)
   .pipe(sourcemaps.init())
-  .pipe(wrap("require([\"require\",\"module\",\"exports\"], function(require,module,exports) {<%= contents %>});"))
+  .pipe(wrap("define([\"require\",\"module\",\"exports\"], function(require,module,exports) {<%= contents %>});"))
   .pipe(uglify())
   .pipe(rename({extname: ".min.js"}))
   .pipe(sourcemaps.write("./")) //Write a sourcemap for browser debugging
