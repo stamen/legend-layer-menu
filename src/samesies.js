@@ -1,116 +1,132 @@
-"use strict";
+(function() {
+  "use strict";
 
-var listeners = {},
-    data      = {};
+  var listeners = {},
+      data      = {};
 
-var interfaceMethods = {
+  var interfaceMethods = {
 
-  "on" : function on(type, callback, data, once) {
-    if (!listeners[type]) {
-      listeners[type] = [];
-    }
+    "on" : function on(type, callback, data, once) {
+      if (!listeners[type]) {
+        listeners[type] = [];
+      }
 
-    listeners[type].push(arguments);
-  },
+      listeners[type].push(arguments);
+    },
 
-  //
-  // Just like on but it unsubscribes after one fire
-  //
-  "once" : function once(type, callback, data) {
-    return this.on.apply(this, [
-      arguments[0],
-      arguments[1],
-      arguments[2],
-      true
-    ]);
-  },
+    //
+    // Just like on but it unsubscribes after one fire
+    //
+    "once" : function once(type, callback, data) {
+      return this.on.apply(this, [
+        arguments[0],
+        arguments[1],
+        arguments[2],
+        true
+        ]);
+      },
 
-  //
-  // Fire an event and run all subscribers
-  //
-  "fire" : function fire(type, data) {
-    if(listeners[type]) {
-      listeners[type].forEach(function(listener) {
-        listener[1]({
-          listener : listener[2],
-          caller   : data
+      //
+      // Fire an event and run all subscribers
+      //
+      "fire" : function fire(type, data) {
+        if(listeners[type]) {
+          listeners[type].forEach(function(listener) {
+            listener[1]({
+              listener : listener[2],
+              caller   : data
+            });
+          });
+
+          listeners[type] = listeners[type].filter(function(p) {return !p[3];});
+        }
+      },
+
+      //
+      // Gets a value by key
+      //
+      "get" : function get(key) {
+
+        this.fire("get:" + key, {
+          "value" : data[key]
         });
-      });
 
-      listeners[type] = listeners[type].filter(function(p) {return !p[3];});
-    }
-  },
+        this.fire("get", {
+          "value" : data[key],
+          "key"   : key
+        });
 
-  //
-  // Gets a value by key
-  //
-  "get" : function get(key) {
+        return data[key];
 
-    this.fire("get:" + key, {
-      "value" : data[key]
-    });
+      },
 
-    this.fire("get", {
-      "value" : data[key],
-      "key"   : key
-    });
+      //
+      // Sets a value by key
+      //
+      "set" : function get(key, value) {
 
-    return data[key];
+        var old = data[key];
 
-  },
+        data[key] = value;
 
-  //
-  // Sets a value by key
-  //
-  "set" : function get(key, value) {
+        this.fire("set:" + key, {
+          "value" : data[key]
+        });
 
-    var old = data[key];
+        this.fire("set", {
+          "value"    : data[key],
+          "oldValue" : old,
+          "key"      : key
+        });
 
-    data[key] = value;
+        return data[key];
 
-    this.fire("set:" + key, {
-      "value" : data[key]
-    });
+      }
+    };
 
-    this.fire("set", {
-      "value"    : data[key],
-      "oldValue" : old,
-      "key"      : key
-    });
+    var samesies = {
+      "mix" : function (object) {
+        for (var i in interfaceMethods) {
+          object[i] = interfaceMethods[i];
+        }
 
-    return data[key];
+        return object;
+      },
+      "extend" : function (instance) {
 
-  }
-};
+        for (var i in interfaceMethods) {
+          instance.prototype[i] = interfaceMethods[i];
+        }
 
-var outs = {
-  "mix" : function (object) {
-    for (var i in interfaceMethods) {
-      object[i] = interfaceMethods[i];
-    }
+        return instance;
+      }
+    };
 
-    return object;
-  },
-  "extend" : function (instance) {
-
-    for (var i in interfaceMethods) {
-      instance.prototype[i] = interfaceMethods[i];
+    //
+    // If this is a CommonJS module
+    //
+    if (module && module.exports) {
+      module.exports = samesies;
     }
 
-    return instance;
-  }
-};
+    //
+    // If this is an AMD module
+    //
+    if (typeof define === "function") {
+      define(samesies);
+    }
 
-//
-// If this is a CommonJS module
-//
-if (module && module.exports) {
-  module.exports = outs;
-}
+    //
+    // If just exports and it's an object
+    //
+    if (!module && typeof exports === "object") {
+      exports.samesies = samesies;
+    }
 
-//
-// If this is an AMD module
-//
-if (typeof define === "function") {
-  define(outs);
-}
+    //
+    // If none of those, add it to Window (as long as there is nothing named samesies)
+    //
+    if (!(module && module.exports) && !(typeof define === "function") && !(typeof exports === "object") && (typeof window === "object") && !(window.samesies)) {
+      window.samesies = samesies;
+    }
+}());
