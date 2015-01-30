@@ -1,6 +1,6 @@
 {
   "name": "samesies",
-  "main": "dist/samesies.min.js",
+  "main": "src/samesies.js",
   "version": "0.2.6",
   "homepage": "https://github.com/standardpixel/samesies",
   "authors": [
