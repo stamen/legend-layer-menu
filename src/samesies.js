@@ -101,6 +101,18 @@ var outs = {
   }
 };
 
-module.exports = outs;
+//
+// If this is a CommonJS module
+//
+if (module && module.exports) {
+  module.exports = outs;
+}
+
+//
+// If this is an AMD module
+//
+if (typeof define === "function") {
+  define(outs);
+}
 
 return outs;
