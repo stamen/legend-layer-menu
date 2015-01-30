@@ -126,7 +126,7 @@
     //
     // If none of those, add it to Window (as long as there is nothing named samesies)
     //
-    if (!(module && module.exports) && !(typeof define === "function") && !(typeof exports === "object") && (typeof window === "object") && !(window.samesies)) {
+    if (typeof define !== "function" && typeof window === "object") {
       window.samesies = samesies;
     }
 }());
