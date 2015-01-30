@@ -2,7 +2,6 @@
   "name": "browsersugar",
   "version": "0.0.0",
   "description": "A simple mix-in with common interface components",
-  "main": "index.js",
   "scripts": {
     "test": "mocha",
     "start": "gulp && gulp watch"
