@@ -127,6 +127,9 @@
     // If none of those, add it to Window (as long as there is nothing named samesies)
     //
     if (typeof define !== "function" && typeof window === "object") {
-      window.samesies = samesies;
+      if (!window.STPX) {
+        window.STPX = {};
+      }
+      window.STPX.samesies = samesies;
     }
 }());
