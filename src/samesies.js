@@ -114,5 +114,3 @@ if (module && module.exports) {
 if (typeof define === "function") {
   define(outs);
 }
-
-return outs;

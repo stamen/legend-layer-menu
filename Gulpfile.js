@@ -19,7 +19,7 @@ var paths = {
 gulp.task('lint', function() {
   return gulp.src(paths.js)
   .pipe(jshint({
-    "predef"       : ["module"],
+    "predef"       : ["module", "define"],
     "expr"         : true,
     "globalstrict" : true
   }))
