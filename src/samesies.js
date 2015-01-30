@@ -105,7 +105,7 @@
     //
     // If this is a CommonJS module
     //
-    if (module && module.exports) {
+    if (typeof module === "object" && module.exports) {
       module.exports = samesies;
     }
 
@@ -119,7 +119,7 @@
     //
     // If just exports and it's an object
     //
-    if (!module && typeof exports === "object") {
+    if (typeof module !== "object" && typeof exports === "object") {
       exports.samesies = samesies;
     }
 
