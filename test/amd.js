@@ -7,11 +7,11 @@ describe("AMD module", function(){
 
   it('loads as an AMD module', function(){
 
-    function define(samesies) {
-      assert.equal(typeof samesies.mix, "function", ["There is no 'mix' function"]);
+    function define(browsersugar) {
+      assert.equal(typeof browsersugar.mix, "function", ["There is no 'mix' function"]);
     }
 
-    eval(fs.readFileSync("./dist/samesies.min.js", {"encoding":"utf8"}));
+    eval(fs.readFileSync("./dist/browsersugar.min.js", {"encoding":"utf8"}));
   });
 
 });

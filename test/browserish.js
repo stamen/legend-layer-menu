@@ -9,9 +9,9 @@ describe("Browser", function(){
 
     var window = {};
 
-    eval(fs.readFileSync("./dist/samesies.min.js", {"encoding":"utf8"}));
+    eval(fs.readFileSync("./dist/browsersugar.min.js", {"encoding":"utf8"}));
 
-    assert.equal(typeof window.samesies.mix, "function", ["There is no 'mix' function"]);
+    assert.equal(typeof window.STPX.browsersugar.mix, "function", ["There is no 'mix' function"]);
 
   });
 
