@@ -9,7 +9,7 @@
       //
       // Gets an element by selector. Uses JQuery if available.
       //
-      get : function get(selector, root) {
+      getElements : function get(selector, root) {
         return ((root) ? root : document).querySelectorAll(selector);
       },
 
@@ -46,7 +46,7 @@
             }
           };
 
-          xmlHttp.open( "GET", uri, false );
+          xmlHttp.open( "GET", uri, true );
           return xmlHttp.send( null );
         } else {
           return false;
