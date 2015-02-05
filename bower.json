@@ -1,12 +1,12 @@
 {
   "name": "browsersugar",
-  "main": "src/browsersugar.js",
+  "main": "src/ecoengine-client.js",
   "version": "0.0.1",
-  "homepage": "https://github.com/standardpixel/browsersugar",
+  "homepage": "https://github.com/stamen/ecoengine-client",
   "authors": [
     "eric@standardpixel.com"
   ],
-  "description": "A simple mix-in with tools for simplified use of common browser features",
+  "description": "/stamen/ecoengine-client",
   "keywords": [
     "interface",
     "events",
