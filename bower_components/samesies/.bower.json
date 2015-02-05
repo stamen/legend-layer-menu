@@ -1,0 +1,31 @@
+{
+  "name": "samesies",
+  "main": "src/samesies.js",
+  "homepage": "https://github.com/standardpixel/samesies",
+  "authors": [
+    "eric@standardpixel.com"
+  ],
+  "description": "A simple mix-in with common interface components",
+  "keywords": [
+    "interface",
+    "events"
+  ],
+  "license": "ISC",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "00a6a4054c",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "00a6a4054c1fef0571110cb3c8ef42aa18702523"
+  },
+  "_source": "git://github.com/standardpixel/samesies.git",
+  "_target": "*",
+  "_originalSource": "samesies",
+  "_direct": true
+}

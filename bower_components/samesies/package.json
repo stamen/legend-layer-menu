@@ -1,26 +1,26 @@
 {
-  "name": "legend-layer-menu",
-  "version": "0.0.0",
-  "description": "Acts as a legend and controls for a map",
+  "name": "samesies",
+  "version": "0.2.4",
+  "description": "A simple mix-in with common interface components",
+  "main": "index.js",
   "scripts": {
-    "test": "mocha",
-    "start": "gulp && gulp watch"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/stamen/legend-layer-menu.git"
+    "url": "git://github.com/standardpixel/samesies.git"
   },
   "keywords": [
     "interface",
     "client",
     "server"
   ],
-  "author": "evg@stamen.com",
+  "author": "eric@standardpixel.com",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/stamen/legend-layer-menu/issues"
+    "url": "https://github.com/standardpixel/samesies/issues"
   },
-  "homepage": "https://github.com/stamen/legend-layer-menu",
+  "homepage": "https://github.com/standardpixel/samesies",
   "dependencies": {
     "gulp": "~3.8.10",
     "gulp-watch": "~3.0.0",
