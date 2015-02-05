@@ -1,7 +1,7 @@
 {
-  "name": "browsersugar",
+  "name": "ecoengine-client",
   "main": "src/ecoengine-client.js",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "homepage": "https://github.com/stamen/ecoengine-client",
   "authors": [
     "evg@stamen.com"
