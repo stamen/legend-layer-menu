@@ -4,9 +4,9 @@
   "version": "0.0.1",
   "homepage": "https://github.com/stamen/ecoengine-client",
   "authors": [
-    "eric@standardpixel.com"
+    "evg@stamen.com"
   ],
-  "description": "/stamen/ecoengine-client",
+  "description": "A Javascript client for the Eco Engine API",
   "keywords": [
     "interface",
     "events",
