@@ -62,6 +62,6 @@ gulp.task('default',function(){
 // Watch directories For Changes
 //
 gulp.task('watch', function() {
-  gulp.watch('src/*.*', ['lint','uglify','scss']);
+  gulp.watch('src/*.*', ['lint','uglify','sass']);
   console.log('watching directory:' + 'src/*.*');
 });

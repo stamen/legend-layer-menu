@@ -242,8 +242,8 @@
       inputFormNode.classList.remove("hidden");
     }
 
-    function getLayerNode(id) {
-      return rootNode.querySelector("layer-item-" + id);
+    function getLayerNode(layer) {
+      return rootNode.querySelector(".layer-item-" + layer.id);
     }
 
     // target elements with the "draggable" class
@@ -264,13 +264,14 @@
 
     function onClick(e) {
         promptUserForLayerData(e.target, function() {
-          var formNode = e.target.parentNode.querySelector("form");
+          var formNode = e.target.parentNode.querySelector("form"),
+              layerId  = e.target.getAttribute("data-for") + formNode["label"].value.toLowerCase().replace(/\s/g,"&");
 
           append(
             document.querySelector("." + e.target.getAttribute("data-for")),
             processTemplate(layerTemplate, {
-              "label"   : formNode["label"].value,
-              "layerid" : e.target.getAttribute("data-for")
+              "label" : formNode["label"].value,
+              "id"    : layerId
             })
           );
 
@@ -278,7 +279,7 @@
             "list"  : e.target.getAttribute("data-for"),
             "label" : formNode["label"].value,
             "uri"   : formNode["uri"].value,
-            "id"    : e.target.getAttribute("data-for") + formNode["label"].value.toLowerCase().replace(/\s/g,"&")
+            "id"    : layerId
           });
         });
     }
