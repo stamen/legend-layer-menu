@@ -5,7 +5,9 @@ var gulp       = require('gulp'),
     jshint     = require('gulp-jshint'),
     uglify     = require('gulp-uglify'),
     sourcemaps = require('gulp-sourcemaps'),
-    wrap       = require('gulp-wrap');
+    wrap       = require('gulp-wrap'),
+    run        = require("gulp-run"),
+    fs         = require('fs');
 
 var paths = {
   js        : './src/*.js',
@@ -37,17 +39,29 @@ gulp.task('uglify', function() {
 });
 
 //
+// Generate CSS from Sass and move it
+// to the public directory
+//
+//
+gulp.task("sass", function () {
+  fs.readdirSync("./src").forEach(function() {
+    run("sass --update src/:./src", {}).exec();
+  });
+});
+
+//
 // Run all default tasks
 //
 gulp.task('default',function(){
   gulp.start('lint');
   gulp.start('uglify');
+  gulp.start('sass');
 });
 
 //
 // Watch directories For Changes
 //
 gulp.task('watch', function() {
-  gulp.watch(paths.js, ['lint','uglify']);
-  console.log('watching directory:' + paths.js);
+  gulp.watch('src/*.*', ['lint','uglify','scss']);
+  console.log('watching directory:' + 'src/*.*');
 });

@@ -1,6 +1,9 @@
 {
   "name": "legend-layer-menu",
-  "main": "src/legend-layer-menu.js",
+  "main": [
+    "src/legend-layer-menu.js",
+    "src/legend-layer-menu.css"
+  ],
   "version": "0.0.0",
   "homepage": "https://github.com/stamen/legend-layer-menu",
   "authors": [
