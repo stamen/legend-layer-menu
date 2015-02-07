@@ -32,7 +32,10 @@ gulp.task('uglify', function() {
 
   gulp.src(paths.js)
   .pipe(sourcemaps.init())
-  .pipe(uglify())
+  .pipe(uglify().on("error", function(e) {
+    console.log("Uglify error:\x07",e.message, " on line: ", e.lineNumber);
+    return this.end();
+  }))
   .pipe(rename({extname: ".min.js"}))
   .pipe(sourcemaps.write("./")) //Write a sourcemap for browser debugging
   .pipe(gulp.dest(paths.dist))

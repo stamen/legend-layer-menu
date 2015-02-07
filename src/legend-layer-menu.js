@@ -3,18 +3,34 @@
 
   function LegendLayerMenu(rootSelector) {
 
+    //
+    // Constants
+    //
     var that              = this,
         rootNode          = document.querySelector(rootSelector), //"#legend-layer-menu",
         layerGroups       = {},
-        layerTemplate     = "<li id=\"yes-drop\" class=\"draggable drag-drop layer-item-{id}\" data-id=\"{id}\"> <div class=\"grab\"></div>{label}</li>",
+        layers            = {},
+        sortIcon          = [
+              "<svg version=1.1 id=Your_Icon xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink x=0px y=0px viewBox=\"-568.5 362.1 61.6 46.3\" enable-background=\"new -568.5 362.1 61.6 46.3\" xml:space=preserve class=\"grab\"><g><path d=\"M-507.3,370.4l-7.7-7.9c0,0,0,0,0,0c-0.1-0.1-0.3-0.3-0.5-0.4c0,0-0.1,0-0.1,0c0,0-0.1,0-0.1,0c-0.2,0-0.3-0.1-0.5-0.1",
+              "c0,0,0,0,0,0c0,0,0,0,0,0c-0.2,0-0.3,0-0.5,0.1c0,0-0.1,0-0.1,0c-0.2,0.1-0.4,0.2-0.6,0.4l-7.7,7.9c-0.6,0.7-0.6,1.7,0,2.3",
+              "c0.3,0.3,0.7,0.5,1.2,0.5c0.4,0,0.9-0.2,1.3-0.5l4.9-5v29.1c0,0.9,0.6,1.7,1.5,1.7c0.9,0,1.5-0.7,1.5-1.7v-29l4.9,4.9",
+              "c0.3,0.3,0.8,0.5,1.2,0.5c0.4,0,0.9-0.2,1.2-0.5C-506.7,372.1-506.7,371.1-507.3,370.4z\"/><path d=\"M-552.8,397.7l-4.9,4.9v-29c0-0.9-0.6-1.7-1.5-1.7s-1.5,0.7-1.5,1.7v29.1l-4.9-5c-0.6-0.7-1.7-0.7-2.4,0",
+              "c-0.7,0.6-0.7,1.7-0.1,2.3l7.6,7.9c0.3,0.3,0.7,0.5,1.2,0.5c0,0,0,0,0,0c0,0,0,0,0,0c0.2,0,0.4,0,0.6-0.1c0.2-0.1,0.4-0.2,0.5-0.4",
+              "c0,0,0,0,0,0l7.7-7.9c0.6-0.7,0.6-1.7-0.1-2.3C-551.1,397.1-552.2,397.1-552.8,397.7z\"/><path d=\"M-524.5,383.2h-26.5c-0.9,0-1.7,0.9-1.7,1.9c0,0.9,0.7,1.9,1.7,1.9h26.5c0.9,0,1.7-0.9,1.7-1.9",
+              "C-522.8,384.2-523.5,383.2-524.5,383.2z\"/><path d=\"M-524.5,375.8h-26.5c-0.9,0-1.7,0.9-1.7,1.9c0,0.9,0.7,1.9,1.7,1.9h26.5c0.9,0,1.7-0.9,1.7-1.9",
+              "C-522.8,376.8-523.5,375.8-524.5,375.8z\"/><path d=\"M-524.5,390.6h-26.5c-0.9,0-1.7,0.9-1.7,1.9c0,0.9,0.7,1.9,1.7,1.9h26.5c0.9,0,1.7-0.9,1.7-1.9",
+              "C-522.8,391.6-523.5,390.6-524.5,390.6z\"/></g></svg>"
+            ].join(""),
+        layerTemplate     = "<li class=\"draggable drag-drop layer-item-{id}\" data-id=\"{id}\"> " + sortIcon + "{label}</li>",
         inputFormTemplate = "<div class=\"input-form hidden\"><form class=\"input-form-element\" name=\"{layerid}-input-form\"><input type=\"text\" name=\"uri\" placeholder=\"EcoEnginwel API URI\" value=\"https://dev-ecoengine.berkeley.edu/api/observations/?format=geojson&selected_facets=family_exact%3A%22cricetidae%22&q=&min_date=1960&max_date=1965&page_size=100\"><input type=\"text\" name=\"label\" placeholder=\"A name for this layer\"><button>Add</button></form></div>",
-        i;
+        i, dragConfig, oldParent, dropConfig;
 
+    //
+    // Add a default class name
+    //
     rootNode.classList.add("legend-layer-menu");
 
-    var oldParent;
-
-    var dragConfig = {
+    dragConfig = {
 
       onstart: function(event) {
 
@@ -26,8 +42,8 @@
 
         rootNode.appendChild(event.target);
 
-        event.target.setAttribute("data-x", (event.clientX-event.target.offsetLeft)-(event.clientX-oLeft));
-        event.target.setAttribute("data-y", (event.clientY-event.target.offsetTop)-(event.clientY-oTop));
+        event.target.setAttribute("data-x", (event.clientX-event.target.offsetLeft+10)-(event.clientX-oLeft));
+        event.target.setAttribute("data-y", (event.clientY-event.target.offsetTop+25)-(event.clientY-oTop));
 
         /*
         event.target.style.webkitTransform =
@@ -41,16 +57,15 @@
       // call this function on every dragmove event
       onmove: function (event) {
 
-        //event.target.setAttribute("data-x", event.target.offsetLeft-event.target.parentNode.offsetLeft);
-        //event.target.setAttribute("data-y", event.target.offsetTop-event.target.parentNode.offsetTop);
+        var layerNode = event.dropzone ? event.dropzone.element() : null;
 
         var target = event.target,
         // keep the dragged position in the data-x/data-y attributes
         x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx,
         y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy,
 
-        isListItem = event.dropzone ? event.dropzone.selector.indexOf("draggable") : "null",
-        dropZone   = event.dropzone ? document.querySelector(event.dropzone.selector) : null;
+        isListItem = event.dropzone ? layerNode.classList.contains("draggable") : null,
+        dropZone   = layerNode;
 
         // translate the element
         target.style.webkitTransform =
@@ -66,12 +81,8 @@
             var dragPosState = [[event.pageX, event.pageY], [(dropZone.offsetLeft+dropZone.parentNode.offsetLeft+dropZone.offsetWidth)/2, (dropZone.offsetTop+dropZone.parentNode.offsetTop+dropZone.offsetHeight)/2]];
 
             if (dragPosState[0][1] < dragPosState[1][1]) {
-              //dropZone.style.borderTop = "inset 3px black";
-              dropZone.style.borderBottom = "solid 1px #777";
               dropZone.setAttribute("data-drop-direction","top");
             } else {
-              dropZone.style.borderTop = "solid 1px #777";
-              //dropZone.style.borderBottom = "inset 3px black";
               dropZone.setAttribute("data-drop-direction","bottom");
             }
           }
@@ -91,7 +102,7 @@
       }
     };
 
-    var dropConfig = {
+    dropConfig = {
       // only accept elements matching this CSS selector
       accept: ".drag-drop",
       // Require a 75% element overlap for a drop to be possible
@@ -150,8 +161,6 @@
 
       for (var i=0; dropzones.length > i; i++) {
         for (var ii=0; dropzones[i].children.length > ii; ii++) {
-          dropzones[i].children[ii].style.borderTop = "solid 1px #777";
-          dropzones[i].children[ii].style.borderBottom = "solid 1px #777";
           dropzones[i].children[ii].setAttribute("data-drop-direction",null);
         }
       }
@@ -170,6 +179,23 @@
         timeout = setTimeout(later, wait);
         if (callNow) {func.apply(context, args);}
       };
+    }
+
+    //
+    // Create a unique id for layers
+    // lifted from http://stackoverflow.com/a/8809472
+    //
+    function getUniqueId () {
+        var d = new Date().getTime(),
+            newId, r;
+
+        newId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            r = (d + Math.random()*16)%16 | 0;
+            d = Math.floor(d/16);
+            return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+        });
+
+        return newId;
     }
 
     function append(rootNode, html) {
@@ -248,29 +274,50 @@
 
       //Allow lookup by layer object or layer id
       var id = (typeof layer === "object") ? layer.id : layer;
-      return layerGroups[id].element();
 
+      return layers[id].element();
+
+    }
+
+    function getLayerGroupNode(groupId) {
+
+      return layerGroups[groupId].element();
+
+    }
+
+    function createLayer (layerNode) {
+      layers[layerNode.getAttribute("data-id")] = interact(layerNode).draggable(dragConfig).dropzone(dropConfig);
+
+      that.fire("layerAdded", {
+        "list"  : layerNode.getAttribute("data-list"),
+        "label" : layerNode.getAttribute("data-label"),
+        "uri"   : layerNode.getAttribute("data-uri"),
+        "id"    : layerNode.getAttribute("data-id")
+      });
     }
 
     function onClickLayerAddAction (e) {
       promptUserForLayerData(e.target, function() {
-        var formNode = e.target.parentNode.querySelector("form"),
-            layerId  = e.target.getAttribute("data-for") + formNode.label.value.toLowerCase().replace(/\s/g,"&");
+        var formNode     = e.target.parentNode.querySelector("form"),
+            layerId      = getUniqueId(),
+            layerGroupId = e.target.getAttribute("data-for"),
+            layerNode;
 
         append(
-          getLayerNode(e.target.getAttribute("data-for")),
+          getLayerGroupNode(e.target.getAttribute("data-for")),
           processTemplate(layerTemplate, {
             "label" : formNode.label.value,
             "id"    : layerId
           })
         );
 
-        that.fire("layerAdded", {
-          "list"  : e.target.getAttribute("data-for"),
-          "label" : formNode.label.value,
-          "uri"   : formNode.uri.value,
-          "id"    : layerId
-        });
+        layerNode = rootNode.querySelector(".layer-item-" + layerId);
+        layerNode.setAttribute("data-list",  layerGroupId);
+        layerNode.setAttribute("data-label", formNode.label.value);
+        layerNode.setAttribute("data-uri",   formNode.uri.value);
+
+        createLayer(layerNode, layerGroupId);
+
       });
     }
 
@@ -287,11 +334,21 @@
       //
       for (i=0; layerGroupNodes.length > i; i++) {
 
+        //Get layername from markup
         layerName = layerGroupNodes[i].getAttribute("data-layername");
+
+        //Add a class to drop zone for styleing
+        layerGroupNodes[i].classList.add("dropzone");
+
+        //Bind Interact to drop zone
         layerGroups[layerName] = interact(layerGroupNodes[i]).dropzone(dropConfig);
 
       }
 
+      //
+      // Iterate through buttons and assume they are meant to be
+      // add actions
+      //
       for (i=0; actionNodes.length > i; i++) {
         actionNodes[i].addEventListener("click", onClickLayerAddAction);
       }
