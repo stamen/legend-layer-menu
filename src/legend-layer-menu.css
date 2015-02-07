@@ -35,4 +35,27 @@
   background-color: black;
   display: inline-block; }
 
+#legend-layer-menu {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: solid 1px #aaa;
+  width: 250px;
+  padding: 10px;
+  background-color: #fff; }
+  #legend-layer-menu h2 {
+    position: relative; }
+  #legend-layer-menu .content-container {
+    position: relative; }
+    #legend-layer-menu .content-container button {
+      border-radius: 0;
+      border: solid 1px #aaa;
+      background-color: white;
+      padding: 5px 10px;
+      margin-left: 10px; }
+    #legend-layer-menu .content-container button:hover {
+      background-color: #67abec;
+      color: white;
+      cursor: pointer; }
+
 /*# sourceMappingURL=legend-layer-menu.css.map */

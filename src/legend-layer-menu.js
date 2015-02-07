@@ -4,9 +4,11 @@
   function LegendLayerMenu(rootSelector) {
 
     var that              = this,
-        rootNode          = document.querySelector(rootSelector), //"#legend-layer-menu"
+        rootNode          = document.querySelector(rootSelector), //"#legend-layer-menu",
+        layerGroups       = {},
         layerTemplate     = "<li id=\"yes-drop\" class=\"draggable drag-drop layer-item-{id}\" data-id=\"{id}\"> <div class=\"grab\"></div>{label}</li>",
-        inputFormTemplate = "<div class=\"input-form hidden\"><form class=\"input-form-element\" name=\"{layerid}-input-form\"><input type=\"text\" name=\"uri\" placeholder=\"EcoEnginwel API URI\" value=\"https://dev-ecoengine.berkeley.edu/api/observations/?format=geojson&selected_facets=genus_exact%3A%22tamias%22&q=&min_date=1920-12-30&max_date=1970-12-30&page_size=2000\"><input type=\"text\" name=\"label\" placeholder=\"A name for this layer\"><button>Add</button></form></div>";
+        inputFormTemplate = "<div class=\"input-form hidden\"><form class=\"input-form-element\" name=\"{layerid}-input-form\"><input type=\"text\" name=\"uri\" placeholder=\"EcoEnginwel API URI\" value=\"https://dev-ecoengine.berkeley.edu/api/observations/?format=geojson&selected_facets=family_exact%3A%22cricetidae%22&q=&min_date=1960&max_date=1965&page_size=100\"><input type=\"text\" name=\"label\" placeholder=\"A name for this layer\"><button>Add</button></form></div>",
+        i;
 
     rootNode.classList.add("legend-layer-menu");
 
@@ -78,7 +80,7 @@
       // call this function on every dragend event
       onend: function (event) {
         event.target.style["-webkit-transform"] = "translate(0,0)";
-        event.target.style["transform"] = "translate(0,0)";
+        event.target.style.transform = "translate(0,0)";
         event.target.parentNode.classList.remove("dragging");
 
         if (event.target.parentNode.classList.contains("legend-layer-menu")) {
@@ -243,55 +245,68 @@
     }
 
     function getLayerNode(layer) {
-      return rootNode.querySelector(".layer-item-" + layer.id);
+
+      //Allow lookup by layer object or layer id
+      var id = (typeof layer === "object") ? layer.id : layer;
+      return layerGroups[id].element();
+
     }
 
-    // target elements with the "draggable" class
-    interact(".draggable")
-    .draggable(dragConfig).allowFrom(".grab").dropzone(dropConfig);
+    function onClickLayerAddAction (e) {
+      promptUserForLayerData(e.target, function() {
+        var formNode = e.target.parentNode.querySelector("form"),
+            layerId  = e.target.getAttribute("data-for") + formNode.label.value.toLowerCase().replace(/\s/g,"&");
 
-    // target elements with the "draggable" class
-    interact(".draggable-2")
-    .draggable(dragConfig).allowFrom(".grab").dropzone(dropConfig).dropzone(dropConfig);
-
-    interact(".dropzone1").dropzone(dropConfig);
-
-    interact(".dropzone2").dropzone(dropConfig);
-
-    interact(".dropzone3").dropzone(dropConfig);
-
-    var actions = document.querySelectorAll(".add-action");
-
-    function onClick(e) {
-        promptUserForLayerData(e.target, function() {
-          var formNode = e.target.parentNode.querySelector("form"),
-              layerId  = e.target.getAttribute("data-for") + formNode["label"].value.toLowerCase().replace(/\s/g,"&");
-
-          append(
-            document.querySelector("." + e.target.getAttribute("data-for")),
-            processTemplate(layerTemplate, {
-              "label" : formNode["label"].value,
-              "id"    : layerId
-            })
-          );
-
-          that.fire("layerAdded", {
-            "list"  : e.target.getAttribute("data-for"),
-            "label" : formNode["label"].value,
-            "uri"   : formNode["uri"].value,
+        append(
+          getLayerNode(e.target.getAttribute("data-for")),
+          processTemplate(layerTemplate, {
+            "label" : formNode.label.value,
             "id"    : layerId
-          });
+          })
+        );
+
+        that.fire("layerAdded", {
+          "list"  : e.target.getAttribute("data-for"),
+          "label" : formNode.label.value,
+          "uri"   : formNode.uri.value,
+          "id"    : layerId
         });
+      });
     }
 
-    for (var i=0; actions.length > i; i++) {
-      actions[i].addEventListener("click", onClick);
+    function init() {
+
+      var layerGroupNodes = rootNode.querySelectorAll("ul"),
+          actionNodes     = document.querySelectorAll("h2 button"),
+          layerName;
+
+      //
+      // Iterate through unordered list elements in the root
+      // container and use them to create Interact drop zones
+      // and then add them to the groups
+      //
+      for (i=0; layerGroupNodes.length > i; i++) {
+
+        layerName = layerGroupNodes[i].getAttribute("data-layername");
+        layerGroups[layerName] = interact(layerGroupNodes[i]).dropzone(dropConfig);
+
+      }
+
+      for (i=0; actionNodes.length > i; i++) {
+        actionNodes[i].addEventListener("click", onClickLayerAddAction);
+      }
     }
 
     //
     // Public interface
     //
     that.getLayerNode = getLayerNode;
+
+    //
+    // Here we go
+    //
+
+    init();
 
     return that;
 
