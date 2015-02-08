@@ -23,7 +23,7 @@
             ].join(""),
         layerTemplate     = "<li class=\"draggable drag-drop layer-item-{id}\" data-id=\"{id}\"> " + sortIcon + "{label}</li>",
         inputFormTemplate = "<div class=\"input-form hidden\"><form class=\"input-form-element\" name=\"{layerid}-input-form\"><input type=\"text\" name=\"uri\" placeholder=\"EcoEnginwel API URI\" value=\"https://dev-ecoengine.berkeley.edu/api/observations/?format=geojson&selected_facets=family_exact%3A%22cricetidae%22&q=&min_date=1960&max_date=1965&page_size=100\"><input type=\"text\" name=\"label\" placeholder=\"A name for this layer\"><button>Add</button></form></div>",
-        i, dragConfig, oldParent, dropConfig;
+        i, dragConfig, oldParent, dropConfig, orderCache;
 
     //
     // Add a default class name
@@ -90,6 +90,9 @@
       },
       // call this function on every dragend event
       onend: function (event) {
+
+        var order;
+
         event.target.style["-webkit-transform"] = "translate(0,0)";
         event.target.style.transform = "translate(0,0)";
         event.target.parentNode.classList.remove("dragging");
@@ -98,7 +101,35 @@
           oldParent.appendChild(event.target);
         }
 
+        //
+        // This layer might be in a new list
+        //
+        event.target.setAttribute("data-list",event.target.parentNode.getAttribute("data-layername"))
+
         event.target.classList.remove("dragging");
+
+        order = getLayerOrder();
+
+        if (order !== orderCache) {
+
+          that.fire("orderChanged", {
+            "order" : order.map(function(interactObject) {
+
+              //
+              // Convert output from interact objects to
+              // user friendly layer objects
+              //
+
+              return {
+                "id"    : interactObject.element().getAttribute("data-id"),
+                "list"  : interactObject.element().getAttribute("data-list"),
+                "label" : interactObject.element().getAttribute("data-label"),
+                "uri"   : interactObject.element().getAttribute("data-uri")
+              }
+            })
+          });
+          orderCache = order;
+        }
 
         oldParent = null;
       }
@@ -157,6 +188,17 @@
 
       }
     };
+
+    function getLayerOrder() {
+      var layerNodes = rootNode.querySelectorAll(".draggable"),
+          order      = [];
+
+      for (var i=0; layerNodes.length > i; i++) {
+        order.push( layers[ layerNodes[i].getAttribute("data-id") ] );
+      }
+
+      return order;
+    }
 
     function clearMargins() {
       var dropzones = document.querySelectorAll(".dropzone");
@@ -369,8 +411,9 @@
     //
     // Public interface
     //
-    that.getLayerNode = getLayerNode;
-    that.rootNode     = rootNode;
+    that.getLayerNode  = getLayerNode;
+    that.getLayerOrder = getLayerOrder;
+    that.rootNode      = rootNode;
 
     //
     // Here we go
