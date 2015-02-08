@@ -51,7 +51,7 @@
         "translate(" + (event.pageX-event.target.offsetLeft) + "px, " + (event.pageY-event.target.offsetTop) + "px)";
         */
 
-        event.target.parentNode.classList.add("dragging");
+        event.target.classList.add("dragging");
       },
 
       // call this function on every dragmove event
@@ -97,6 +97,8 @@
         if (event.target.parentNode.classList.contains("legend-layer-menu")) {
           oldParent.appendChild(event.target);
         }
+
+        event.target.classList.remove("dragging");
 
         oldParent = null;
       }
@@ -242,6 +244,11 @@
       var inputFormNode = buttonNode.parentNode.querySelector(".input-form");
 
       //
+      // Rise above!
+      //
+      buttonNode.parentNode.style.zIndex = 1;
+
+      //
       // Add input form for this menu group if it
       // does not already exist
       //
@@ -256,6 +263,11 @@
           e.preventDefault();
 
           e.target.parentNode.parentNode.classList.add("hidden");
+
+          //
+          // Sit back down
+          //
+          buttonNode.parentNode.style.zIndex = "inherit";
 
           if (typeof callback === "function") {
             callback();
@@ -358,6 +370,7 @@
     // Public interface
     //
     that.getLayerNode = getLayerNode;
+    that.rootNode     = rootNode;
 
     //
     // Here we go
