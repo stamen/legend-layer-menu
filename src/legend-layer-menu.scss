@@ -241,10 +241,20 @@
     cursor:normal;
   }
 
+  &.dragging {
+    box-shadow:1px 1px 1px rgba(0,0,0,.9);
+  }
+
   .grab {
     width:20px;
     display:inline-block;
     float: left;
     cursor:move;
+    margin: 5px;
+  }
+
+  .label {
+    margin-left: 5px;
+    font-size: 75%;
   }
 }

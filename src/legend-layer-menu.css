@@ -177,10 +177,16 @@
   z-index: 10; }
   .drag-drop:hover {
     cursor: normal; }
+  .drag-drop.dragging {
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.9); }
   .drag-drop .grab {
     width: 20px;
     display: inline-block;
     float: left;
-    cursor: move; }
+    cursor: move;
+    margin: 5px; }
+  .drag-drop .label {
+    margin-left: 5px;
+    font-size: 75%; }
 
 /*# sourceMappingURL=legend-layer-menu.css.map */
