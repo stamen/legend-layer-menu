@@ -11,7 +11,7 @@
         layerGroups       = {},
         layers            = {},
         sortIcon          = [
-              "<svg version=1.1 id=Your_Icon xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink x=0px y=0px viewBox=\"-568.5 362.1 61.6 46.3\" enable-background=\"new -568.5 362.1 61.6 46.3\" xml:space=preserve class=\"grab\"><g><path d=\"M-507.3,370.4l-7.7-7.9c0,0,0,0,0,0c-0.1-0.1-0.3-0.3-0.5-0.4c0,0-0.1,0-0.1,0c0,0-0.1,0-0.1,0c-0.2,0-0.3-0.1-0.5-0.1",
+              "<svg version=1.1 class=\"drag-icon\" xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink x=0px y=0px viewBox=\"-568.5 362.1 61.6 46.3\" enable-background=\"new -568.5 362.1 61.6 46.3\" xml:space=preserve class=\"grab\"><g><path d=\"M-507.3,370.4l-7.7-7.9c0,0,0,0,0,0c-0.1-0.1-0.3-0.3-0.5-0.4c0,0-0.1,0-0.1,0c0,0-0.1,0-0.1,0c-0.2,0-0.3-0.1-0.5-0.1",
               "c0,0,0,0,0,0c0,0,0,0,0,0c-0.2,0-0.3,0-0.5,0.1c0,0-0.1,0-0.1,0c-0.2,0.1-0.4,0.2-0.6,0.4l-7.7,7.9c-0.6,0.7-0.6,1.7,0,2.3",
               "c0.3,0.3,0.7,0.5,1.2,0.5c0.4,0,0.9-0.2,1.3-0.5l4.9-5v29.1c0,0.9,0.6,1.7,1.5,1.7c0.9,0,1.5-0.7,1.5-1.7v-29l4.9,4.9",
               "c0.3,0.3,0.8,0.5,1.2,0.5c0.4,0,0.9-0.2,1.2-0.5C-506.7,372.1-506.7,371.1-507.3,370.4z\"/>",
@@ -23,7 +23,14 @@
               "C-522.8,376.8-523.5,375.8-524.5,375.8z\"/><path d=\"M-524.5,390.6h-26.5c-0.9,0-1.7,0.9-1.7,1.9c0,0.9,0.7,1.9,1.7,1.9h26.5c0.9,0,1.7-0.9,1.7-1.9",
               "C-522.8,391.6-523.5,390.6-524.5,390.6z\"/></g></svg>"
             ].join(""),
-        layerTemplate     = "<li class=\"draggable drag-drop layer-item-{id}\" data-id=\"{id}\"> " + sortIcon + "<span class=\"label\">{label}</span></li>",
+        deleteIcon        = [
+              "<svg class=\"delete-icon\" version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\"",
+              "viewBox=\"18.3 -2.1 93.6 92.3\" enable-background=\"new 18.3 -2.1 93.6 92.3\" xml:space=\"preserve\">",
+              "<path d=\"M27.9-2.1l-8.4,8.4l4.2,4.2l33.6,33.6L23.7,77.7l-4.2,4.2l8.4,8.4l4.2-4.2l33.6-33.6l33.6,33.6l4.2,4.2l8.4-8.4l-4.2-4.2",
+              "L74,44.1l33.6-33.6l4.2-4.2l-8.4-8.4l-4.2,4.2L65.7,35.7L32.1,2.1C32.1,2.1,27.9-2.1,27.9-2.1z\"/>",
+              "</svg>"
+        ].join(""),
+        layerTemplate     = "<li class=\"draggable drag-drop layer-item-{id}\" data-id=\"{id}\"> " + sortIcon + "<span class=\"label\">{label}</span> " + deleteIcon + " </li>",
         inputFormTemplate = "<div class=\"input-form hidden\"><form class=\"input-form-element\" name=\"{layerid}-input-form\"><input type=\"text\" name=\"uri\" placeholder=\"EcoEnginwel API URI\" value=\"https://dev-ecoengine.berkeley.edu/api/observations/?format=geojson&selected_facets=family_exact%3A%22cricetidae%22&q=&min_date=1960&max_date=1965&page_size=100\"><input type=\"text\" name=\"label\" placeholder=\"A name for this layer\"><button>Add</button></form></div>",
         i, dragConfig, oldParent, dropConfig, orderCache;
 
@@ -44,8 +51,9 @@
 
         rootNode.appendChild(event.target);
 
+        //TODO: Stop hard coding the offset
         event.target.setAttribute("data-x", (event.clientX-event.target.offsetLeft+10)-(event.clientX-oLeft));
-        event.target.setAttribute("data-y", (event.clientY-event.target.offsetTop+25)-(event.clientY-oTop));
+        event.target.setAttribute("data-y", (event.clientY-event.target.offsetTop+60)-(event.clientY-oTop));
 
         /*
         event.target.style.webkitTransform =
@@ -361,6 +369,20 @@
 
     function createLayer (layerNode) {
       layers[layerNode.getAttribute("data-id")] = interact(layerNode).draggable(dragConfig).dropzone(dropConfig);
+
+      layers[layerNode.getAttribute("data-id")].element().addEventListener("click", function(e) {
+
+        e.preventDefault();
+
+        if (e.target.classList.contains("delete-icon")) {
+
+          var layerElement = e.target.parentNode;
+
+          layerElement.parentNode.removeChild(layerElement);
+          triggerOrderChange();
+        }
+
+      });
 
       that.fire("layerAdded", {
         "list"  : layerNode.getAttribute("data-list"),

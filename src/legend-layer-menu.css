@@ -3,9 +3,10 @@
   top: 10px;
   right: 10px;
   border: solid 1px #aaa;
-  width: 250px;
+  width: 270px;
   padding: 10px;
-  background-color: #fff; }
+  background-color: #fff;
+  box-sizing: border-box; }
   .legend-layer-menu h2 {
     position: relative; }
   .legend-layer-menu select {
@@ -13,7 +14,6 @@
   .legend-layer-menu .content-container {
     position: relative; }
     .legend-layer-menu .content-container button {
-      border-radius: 0;
       border: solid 1px #aaa;
       background-color: white;
       padding: 3px 5px;
@@ -24,7 +24,6 @@
       cursor: pointer; }
   .legend-layer-menu .dropzone {
     border: dashed 1px transparent;
-    border-radius: 4px;
     padding: 10px;
     transition: background-color 0.3s, border-color 0.3s;
     min-height: 25px;
@@ -37,6 +36,8 @@
     display: inline-block;
     min-width: 40px;
     padding: 3px;
+    padding-left: 25px;
+    box-sizing: border-box;
     border: solid 1px #eee;
     background-color: #fff;
     -webkit-transform: translate(0px, 0px);
@@ -57,5 +58,18 @@
     .legend-layer-menu .drag-drop .label {
       margin-left: 5px;
       font-size: 75%; }
+    .legend-layer-menu .drag-drop .delete-icon {
+      width: 7px;
+      position: absolute;
+      right: 10px;
+      top: 11px;
+      cursor: pointer; }
+    .legend-layer-menu .drag-drop .drag-icon {
+      fill: #aaa;
+      width: 21px;
+      height: 13px;
+      position: absolute;
+      left: 6px;
+      top: 8px; }
 
 /*# sourceMappingURL=legend-layer-menu.css.map */
