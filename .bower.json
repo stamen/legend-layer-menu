@@ -1,0 +1,41 @@
+{
+  "name": "legend-layer-menu",
+  "main": [
+    "src/legend-layer-menu.js",
+    "src/legend-layer-menu.css"
+  ],
+  "homepage": "https://github.com/stamen/legend-layer-menu",
+  "authors": [
+    "evg@stamen.com"
+  ],
+  "description": "Acts as a legend and controls for a map",
+  "keywords": [
+    "interface",
+    "events",
+    "browser",
+    "XHR",
+    "API",
+    "DOM"
+  ],
+  "license": "ISC",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "interact": "~1.2.2",
+    "samesies": "*"
+  },
+  "_release": "cb465ac7d8",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "cb465ac7d8f35a07c1a9797434a5753b4dca6be6"
+  },
+  "_source": "git@github.com:stamen/legend-layer-menu.git",
+  "_target": "master",
+  "_originalSource": "git@github.com:stamen/legend-layer-menu.git"
+}

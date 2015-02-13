@@ -11,6 +11,8 @@
 
   h2 {
     position:relative;
+    font-size: 125%;
+    font-weight: normal;
   }
 
   select {
@@ -106,6 +108,34 @@
       position: absolute;
       left: 6px;
       top: 8px;
+    }
+
+    .color-picker {
+      padding: 0;
+      border: 0;
+      background-color: white;
+      width: 20px;
+      height: 20px;
+      margin-left: 5px;
+    }
+  }
+
+  .color-picker-panel {
+    background-color:#fff;
+    display: none;
+    position: absolute;
+    top: 106px;
+    left: 23px;
+    width:220px;
+    padding:5px;
+    border: solid 1px #aaa;
+    box-shadow:1px 1px 1px rgba(0,0,0,.5);
+
+    .color {
+      width:20px;
+      height:20px;
+      float:left;
+      cursor:pointer;
     }
   }
 
