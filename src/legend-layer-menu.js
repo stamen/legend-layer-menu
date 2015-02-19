@@ -63,7 +63,8 @@
               "L74,44.1l33.6-33.6l4.2-4.2l-8.4-8.4l-4.2,4.2L65.7,35.7L32.1,2.1C32.1,2.1,27.9-2.1,27.9-2.1z\"/>",
               "</svg>"
         ].join(""),
-        layerTemplate       = "<li class=\"draggable drag-drop layer-item-{id}\" data-id=\"{id}\" data-color=\"{color}\" data-list=\"{group}\" data-label=\"{label}\" data-uri=\"{uri}\"> " + sortIcon + "<input type=\"color\" class=\"color-picker\" value=\"{color}\"><span class=\"label\">{label}</span> " + deleteIcon + " </li>",
+        editIcon        = "<span class=\"edit-icon\">[edit]</span>",
+        layerTemplate       = "<li class=\"draggable drag-drop layer-item-{id}\" data-id=\"{id}\" data-color=\"{color}\" data-list=\"{list}\" data-label=\"{label}\" data-uri=\"{uri}\"> " + sortIcon + "<input type=\"color\" class=\"color-picker\" value=\"{color}\"><span class=\"label\">{label}</span> " + deleteIcon + editIcon + " </li>",
         inputFormTemplate   = "<div class=\"input-form hidden\"><form class=\"input-form-element\" name=\"{layerid}-input-form\"><input type=\"text\" name=\"uri\" placeholder=\"EcoEnginwel API URI\" value=\"https://dev-ecoengine.berkeley.edu/api/observations/?format=geojson&selected_facets=family_exact%3A%22cricetidae%22&q=&min_date=1960&max_date=1965&page_size=100\"><input type=\"text\" name=\"label\" placeholder=\"A name for this layer\"><button>Add</button></form></div>",
         colorPickerTemplate = "<div class=\"color-picker-panel\" style=\"display:none;position:absolute;\">" + colors.map(function(c) {return "<div class=\"color\" style=\"background-color:"+c+";\"></div>"}).join("") + "</div>",
         i, dragConfig, oldParent, dropConfig, orderCache, inputFormNode;
@@ -440,7 +441,21 @@
 
     }
 
-    function createLayer (layerNode) {
+    function createLayer (layerObject) {
+
+      var layerNode;
+
+      layerObject.id = getUniqueId();
+
+      //
+      // Append new layer item in menu
+      //
+      append(
+        getLayerGroupNode(layerObject.list),
+        processTemplate(layerTemplate, layerObject)
+      );
+
+      layerNode = rootNode.querySelector(".layer-item-" + layerObject.id);
 
       layers[layerNode.getAttribute("data-id")] = interact(layerNode).draggable(dragConfig).dropzone(dropConfig);
 
@@ -476,33 +491,29 @@
       };
     }
 
+    //
+    // Returns full ui state object
+    //
+    function getMenuState() {
+      return Object.keys(layers).map(function(key) {
+        return getLayerObjectFromLayerElement(layers[key].element());
+      });
+    }
+
     function onClickLayerAddAction (e) {
       promptUserForLayerData(e.target, function() {
         var formNode     = e.target.parentNode.querySelector("form"),
-            layerId      = getUniqueId(),
-            layerGroupId = e.target.getAttribute("data-for"),
-            layerNode;
-
-        //
-        // Append new layer item in menu
-        //
-        append(
-          getLayerGroupNode(e.target.getAttribute("data-for")),
-          processTemplate(layerTemplate, {
-            "label" : formNode.label.value,
-            "id"    : layerId,
-            "color" : getNewColor(),
-            "group" : layerGroupId,
-            "uri"   : formNode.uri.value
-          })
-        );
-
-        layerNode = rootNode.querySelector(".layer-item-" + layerId);
+            layerGroupId = e.target.getAttribute("data-for");
 
         //
         // Register new layer
         //
-        createLayer(layerNode, layerGroupId);
+        createLayer({
+          "label" : formNode.label.value,
+          "color" : getNewColor(),
+          "list" : layerGroupId,
+          "uri"   : formNode.uri.value
+        });
 
       });
     }
@@ -591,6 +602,17 @@
       }
 
       //
+      // Make layers to match marker state
+      //
+      if (options.menuState && options.menuState.length) {
+        options.menuState.forEach(function (layerObject) {
+
+          createLayer(layerObject);
+
+        });
+      }
+
+      //
       // Handle click events
       //
       rootNode.addEventListener("click", function(e) {
@@ -637,6 +659,7 @@
     that.getLayerNode  = getLayerNode;
     that.getLayerOrder = getLayerOrder;
     that.rootNode      = rootNode;
+    that.getMenuState  = getMenuState;
 
     //
     // Here we go

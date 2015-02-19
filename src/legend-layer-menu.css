@@ -66,6 +66,12 @@
       right: 10px;
       top: 11px;
       cursor: pointer; }
+    .legend-layer-menu .drag-drop .edit-icon {
+      font-size: 75%;
+      position: absolute;
+      right: 13px;
+      top: 6px;
+      display: none; }
     .legend-layer-menu .drag-drop .drag-icon {
       fill: #aaa;
       width: 21px;
@@ -80,6 +86,12 @@
       width: 20px;
       height: 20px;
       margin-left: 5px; }
+    .legend-layer-menu .drag-drop:hover .delete-icon {
+      display: none; }
+    .legend-layer-menu .drag-drop:hover .edit-icon {
+      display: block; }
+    .legend-layer-menu .drag-drop:hover.progress .edit-icon {
+      display: none; }
   .legend-layer-menu .color-picker-panel {
     background-color: #fff;
     display: none;

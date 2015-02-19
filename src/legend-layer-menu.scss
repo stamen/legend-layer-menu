@@ -101,6 +101,14 @@
       cursor:pointer;
     }
 
+    .edit-icon {
+      font-size: 75%;
+      position: absolute;
+      right: 13px;
+      top: 6px;
+      display:none;
+    }
+
     .drag-icon {
       fill: #aaa;
       width: 21px;
@@ -117,6 +125,22 @@
       width: 20px;
       height: 20px;
       margin-left: 5px;
+    }
+
+    &:hover {
+      .delete-icon {
+        display:none;
+      }
+
+      .edit-icon {
+        display:block;
+      }
+
+      &.progress {
+        .edit-icon {
+          display:none;
+        }
+      }
     }
   }
 
