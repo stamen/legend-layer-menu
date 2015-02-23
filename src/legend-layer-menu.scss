@@ -8,11 +8,17 @@
   background-color:#fff;
   box-sizing:border-box;
 
-
   h2 {
     position:relative;
     font-size: 125%;
     font-weight: normal;
+
+    .input-form {
+
+      &.hidden {
+        display:none;
+      }
+    }
   }
 
   select {
@@ -125,22 +131,6 @@
       width: 20px;
       height: 20px;
       margin-left: 5px;
-    }
-
-    &:hover {
-      .delete-icon {
-        display:none;
-      }
-
-      .edit-icon {
-        display:block;
-      }
-
-      &.progress {
-        .edit-icon {
-          display:none;
-        }
-      }
     }
   }
 

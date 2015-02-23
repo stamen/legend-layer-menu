@@ -11,6 +11,8 @@
     position: relative;
     font-size: 125%;
     font-weight: normal; }
+    .legend-layer-menu h2 .input-form.hidden {
+      display: none; }
   .legend-layer-menu select {
     width: 100%; }
   .legend-layer-menu .content-container {
@@ -86,12 +88,6 @@
       width: 20px;
       height: 20px;
       margin-left: 5px; }
-    .legend-layer-menu .drag-drop:hover .delete-icon {
-      display: none; }
-    .legend-layer-menu .drag-drop:hover .edit-icon {
-      display: block; }
-    .legend-layer-menu .drag-drop:hover.progress .edit-icon {
-      display: none; }
   .legend-layer-menu .color-picker-panel {
     background-color: #fff;
     display: none;

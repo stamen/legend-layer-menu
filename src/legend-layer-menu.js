@@ -383,38 +383,53 @@
 
     }
 
-    function promptUserForLayerData(buttonNode, callback) {
+    //
+    // Prompts user for data for a  layer. If this is passed a button Node
+    // it will create a layer, if it is a layer node, it will update it
+    //
+    function promptUserForLayerData(buttonNodeOrLayerNode, callback) {
 
-      inputFormNode = buttonNode.parentNode.querySelector(".input-form");
+      var type = buttonNodeOrLayerNode.classList.contains("draggable") ? "edit" : "add",
+          formParent = (type === "add") ? buttonNodeOrLayerNode.parentNode : buttonNodeOrLayerNode.parentNode.parentNode.querySelector("h2");
+
+
+      inputFormNode = formParent.querySelector(".input-form");
 
       //
       // Rise above!
       //
-      buttonNode.parentNode.style.zIndex = 1;
+      formParent.style.zIndex = 1;
 
       //
       // Add input form for this menu group if it
       // does not already exist
       //
       if (!inputFormNode) {
-        append(buttonNode.parentNode, processTemplate(inputFormTemplate, {
-          "layerid" : buttonNode.getAttribute("data-for")
+        append(formParent, processTemplate(inputFormTemplate, {
+          "layerid" : buttonNodeOrLayerNode.getAttribute("data-for")
         }));
-        inputFormNode = buttonNode.parentNode.querySelector(".input-form");
+        inputFormNode = formParent.querySelector(".input-form");
+
+        if (type === "edit") {
+          inputFormNode.uri = buttonNodeOrLayerNode.getAttribute("data-uri");
+          inputFormNode.label = buttonNodeOrLayerNode.getAttribute("data-label");
+        }
 
         inputFormNode.querySelector("button").addEventListener("click", function(e) {
 
           e.preventDefault();
+
+          console.log("Clicked", e.target.parentNode.parentNode);
 
           e.target.parentNode.parentNode.classList.add("hidden");
 
           //
           // Sit back down
           //
-          buttonNode.parentNode.style.zIndex = "inherit";
+          formParent.style.zIndex = "inherit";
 
           if (typeof callback === "function") {
-            callback();
+            callback(inputFormNode);
           }
 
         }, false);
@@ -471,6 +486,12 @@
           triggerOrderChange();
         }
 
+      });
+
+      layerNode.addEventListener("dblclick", function() {
+        promptUserForLayerData(layerNode, function() {
+          console.log(arguments);
+        });
       });
 
       that.fire("layerAdded", getLayerObjectFromLayerElement(layerNode));
