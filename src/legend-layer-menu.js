@@ -286,7 +286,8 @@
         if (rasterLayers[i].value.length) {
           order.push({
             "list" : "raster",
-            "uri"  : rasterLayers[i].value
+            "uri"  : rasterLayers[i].value,
+            "id"   : rasterLayers[i].getAttribute("data-id")
           });
         }
       }
