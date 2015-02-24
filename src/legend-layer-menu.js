@@ -391,7 +391,8 @@
     function promptUserForLayerData(buttonNodeOrLayerNode, callback) {
 
       var type = buttonNodeOrLayerNode.classList.contains("draggable") ? "edit" : "add",
-          formParent = (type === "add") ? buttonNodeOrLayerNode.parentNode : buttonNodeOrLayerNode.parentNode.parentNode.querySelector("h2");
+          formParent = (type === "add") ? buttonNodeOrLayerNode.parentNode : buttonNodeOrLayerNode.parentNode.parentNode.querySelector("h2"),
+          inputs;
 
 
       inputFormNode = formParent.querySelector(".input-form");
@@ -400,6 +401,11 @@
       // Rise above!
       //
       formParent.style.zIndex = 1;
+
+      //
+      // Close any other dialogs
+      //
+      closeDialogs();
 
       //
       // Add input form for this menu group if it
@@ -420,8 +426,6 @@
 
           e.preventDefault();
 
-          console.log("Clicked", e.target.parentNode.parentNode);
-
           e.target.parentNode.parentNode.classList.add("hidden");
 
           //
@@ -435,6 +439,16 @@
 
         }, false);
       }
+
+      //
+      // Clear the form
+      //
+      inputs = inputFormNode.querySelectorAll("input");
+
+      for (var i=0; inputs.length > i; i++) {
+        inputs[i].value = "";
+      }
+
 
       //
       // Show the form
@@ -598,6 +612,14 @@
 
     }
 
+    function closeDialogs() {
+      var inputFormNodes = rootNode.querySelectorAll(".input-form");
+
+      for (var i=0; inputFormNodes.length > i; i++) {
+        inputFormNodes[i].classList.add("hidden");
+      }
+    }
+
     function init() {
 
       var layerGroupNodes = rootNode.querySelectorAll("ul"),
@@ -664,6 +686,17 @@
         }
 
       }, false);
+
+      //
+      // a general escape listener. All dialogs should go away if escape is pressed
+      //
+      document.querySelector("body").addEventListener("keyup", function(e) {
+
+        if (e.keyCode === 27) { //Escape
+          closeDialogs();
+        }
+
+      }, this);
 
       //
       // Add change listeners to raster layers
