@@ -462,7 +462,7 @@
 
       var layerNode;
 
-      layerObject.id = getUniqueId();
+      layerObject.id = layerObject.id || getUniqueId();
 
       //
       // Append new layer item in menu
@@ -482,10 +482,14 @@
 
           e.preventDefault();
 
-          var layerElement = e.target.parentNode;
+          var layerElement = e.target.parentNode,
+              id           = layerElement.getAttribute("data-id");
 
           layerElement.parentNode.removeChild(layerElement);
-          triggerOrderChange();
+
+          delete layers[id];
+
+          that.fire("layerRemoved", id);
         }
 
       });
@@ -505,26 +509,30 @@
     }
 
     function updateLayerData(id, properties) {
-      var element           = layers[id].element(),
-          updatedProperties = [];
 
-      for (var i in properties) {
-        if (properties.hasOwnProperty(i) && element.getAttribute("data-" + i) !== properties[i]) {
+      if (layers[id]) {
+        var element           = layers[id].element(),
+            updatedProperties = [];
 
-          element.setAttribute("data-" + i, properties[i]);
-          updatedProperties.push(i);
+        for (var i in properties) {
+          if (properties.hasOwnProperty(i) && element.getAttribute("data-" + i) !== properties[i]) {
 
+            element.setAttribute("data-" + i, properties[i]);
+            updatedProperties.push(i);
+
+          }
+        }
+
+        element.querySelector(".label").innerHTML = properties.label;
+
+        if (updatedProperties.length) {
+          that.fire("layerUpdated", {
+            "layerObject"       : getLayerObjectFromLayerElement(element),
+            "updatedProperties" : updatedProperties
+          });
         }
       }
 
-      element.querySelector(".label").innerHTML = properties.label;
-
-      if (updatedProperties.length) {
-        that.fire("layerUpdated", {
-          "layerObject"       : getLayerObjectFromLayerElement(element),
-          "updatedProperties" : updatedProperties
-        });
-      }
     }
 
     //
