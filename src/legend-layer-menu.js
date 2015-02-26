@@ -498,14 +498,22 @@
         promptUserForLayerData(layerNode, function(updates) {
           var form = updates.querySelector("form");
           updateLayerData(form.id.value, {
-            "uri"   : form.uri.value,
+            "uri"   : queryOrSearch(form.uri.value),
             "id"    : form.id.value,
-            "label" : form.label.value
+            "label" : form.label.value || form.uri.value
           });
         });
       });
 
       that.fire("layerAdded", getLayerObjectFromLayerElement(layerNode));
+    }
+
+    // 
+    // Intercept query string for EcoEngine convenience (entering search term only)
+    //
+    function queryOrSearch(query) {
+      if (query.indexOf("http") < 0) return "https://dev-ecoengine.berkeley.edu/api/observations/?format=geojson&q=" + query;
+        return query;
     }
 
     function updateLayerData(id, properties) {
@@ -568,10 +576,10 @@
         // Register new layer
         //
         createLayer({
-          "label" : formNode.label.value,
+          "label" : formNode.label.value || formNode.uri.value,
           "color" : getNewColor(),
           "list" : layerGroupId,
-          "uri"   : formNode.uri.value
+          "uri"   : queryOrSearch(formNode.uri.value)
         });
 
       });
