@@ -37,7 +37,7 @@
         ].join(""),
         editIcon        = "<span class=\"edit-icon\">[edit]</span>",
         layerTemplate       = "<li class=\"draggable drag-drop layer-item-{id}\" data-id=\"{id}\" data-color=\"{color}\" data-list=\"{list}\" data-label=\"{label}\" data-uri=\"{uri}\"> " + sortIcon + "<input type=\"color\" class=\"color-picker\" value=\"{color}\"><span class=\"label\">{label}</span> " + deleteIcon + editIcon + " </li>",
-        inputFormTemplate   = "<div class=\"input-form hidden\"><form class=\"input-form-element\" name=\"{layerid}-input-form\"><input type=\"text\" name=\"uri\" placeholder=\"GeoJSON API URI or Keyword\"><input type=\"text\" name=\"label\" placeholder=\"A name for this layer\"><input type=\"hidden\" name=\"id\"><button>Save</button></form></div>",
+        inputFormTemplate   = "<div class=\"input-form hidden\"><form class=\"input-form-element\" name=\"{layerid}-input-form\"><input type=\"text\" name=\"uri\" placeholder=\"GeoJSON API URI or Keyword\"><input type=\"text\" name=\"label\" placeholder=\"A name for this layer\"><input type=\"hidden\" name=\"id\"><button class=\"save\">Save</button><button class=\"close\">Close</button></form></div>",
         colorPickerTemplate = "<div class=\"color-picker-panel\" style=\"display:none;position:absolute;\">" + colors.map(function(c) {return "<div class=\"color\" style=\"background-color:"+c+";\"></div>"}).join("") + "</div>",
         i, dragConfig, oldParent, dropConfig, orderCache, inputFormNode;
 
@@ -63,6 +63,7 @@
         event.target.setAttribute("data-y", (event.clientY-event.target.offsetTop+60)-(event.clientY-oTop));
 
         event.target.classList.add("dragging");
+
       },
 
       // call this function on every dragmove event
@@ -405,7 +406,7 @@
         //
         // The submit button
         //
-        inputFormNode.querySelector("button").addEventListener("click", function(e) {
+        inputFormNode.querySelector("button.save").addEventListener("click", function(e) {
 
           e.preventDefault();
 
@@ -419,6 +420,17 @@
           if (typeof callback === "function") {
             callback(inputFormNode);
           }
+
+        }, false);
+
+        //
+        // The close button
+        //
+        inputFormNode.querySelector("button.close").addEventListener("click", function(e) {
+
+          e.preventDefault();
+
+          closeDialogs();
 
         }, false);
       }
@@ -556,6 +568,19 @@
         "color"   : element.getAttribute("data-color"),
         "element" : element
       };
+    }
+
+    //
+    // Set the draggable state of a menu item by id
+    //
+    function enableMenuItemById(id) {
+      //layers[id].set("dissable", false);
+      //layers[id].element().setAttribute("dissabled", false);
+    }
+
+    function disableMenuItemById(id) {
+      //layers[id].set("dissable", true);
+      //layers[id].element().setAttribute("dissabled", true);
     }
 
     //
@@ -742,10 +767,12 @@
     //
     // Public interface
     //
-    that.getLayerNode  = getLayerNode;
-    that.getLayerOrder = getLayerOrder;
-    that.rootNode      = rootNode;
-    that.getMenuState  = getMenuState;
+    that.getLayerNode        = getLayerNode;
+    that.getLayerOrder       = getLayerOrder;
+    that.rootNode            = rootNode;
+    that.getMenuState        = getMenuState;
+    that.disableMenuItemById = disableMenuItemById;
+    that.enableMenuItemById  = enableMenuItemById;
 
     //
     // Here we go

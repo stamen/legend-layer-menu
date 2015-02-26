@@ -15,6 +15,10 @@
 
     .input-form {
 
+      button {
+        margin-right:5px;
+      }
+
       &.hidden {
         display:none;
       }
@@ -35,7 +39,7 @@
     }
 
     button:hover {
-      background-color:rgb(103,171,236);
+      background-color:rgb(0,180,228);
       color:white;
       cursor:pointer;
     }
@@ -54,7 +58,7 @@
   }
 
   .drop-target {
-    background-color: rgb(103,171,236);
+    background-color: rgb(0,180,228);
   }
 
   .drag-drop {
