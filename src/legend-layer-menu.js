@@ -512,7 +512,7 @@
     // Intercept query string for EcoEngine convenience (entering search term only)
     //
     function queryOrSearch(query) {
-      if (query.indexOf("http") < 0) return "https://dev-ecoengine.berkeley.edu/api/observations/?format=geojson&q=" + query;
+      if (query.indexOf("http") < 0) return "https://dev-ecoengine.berkeley.edu/api/observations/?format=geojson&page_size=50&q=" + query;
         return query;
     }
 
