@@ -333,7 +333,7 @@
 
       for (var i=0; (depth||10) > i && last; i++) {
 
-        if (last && last.className && last.className.indexOf(className) > -1) {
+        if (last && last.className && typeof last.className === "string" && typeof last.className.indexOf === "function" && last.className.indexOf(className) > -1) {
           return last;
         }
 
@@ -574,13 +574,13 @@
     // Set the draggable state of a menu item by id
     //
     function enableMenuItemById(id) {
-      //layers[id].set("dissable", false);
-      //layers[id].element().setAttribute("dissabled", false);
+      layers[id].set("dissable", false);
+      layers[id].element().setAttribute("dissabled", false);
     }
 
     function disableMenuItemById(id) {
-      //layers[id].set("dissable", true);
-      //layers[id].element().setAttribute("dissabled", true);
+      layers[id].set("dissable", true);
+      layers[id].element().setAttribute("dissabled", true);
     }
 
     //
@@ -716,7 +716,8 @@
       // Handle click events
       //
       rootNode.addEventListener("click", function(e) {
-        var layerObject, layerNode;
+        var layerNode = parentHasClass(e.target, "draggable"),
+            layerObject;
 
         //
         // Listener for add layer action
@@ -739,6 +740,16 @@
           layerNode.querySelector(".color-picker").setAttribute("value", e.target.style.backgroundColor);
           layerNode.querySelector(".color-picker").style.backgroundColor = e.target.style.backgroundColor;
           that.fire("color-change", getLayerObjectFromLayerElement(layerNode));
+        }
+
+        //
+        // layer item click
+        //
+        if (layerNode) {
+          that.fire("layer-click", {
+            "event"       : e,
+            "layerObject" : getLayerObjectFromLayerElement(layerNode)
+          });
         }
 
       }, false);
