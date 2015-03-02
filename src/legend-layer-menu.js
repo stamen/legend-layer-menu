@@ -3,7 +3,11 @@
 
   function LegendLayerMenu(rootSelector, options) {
 
+    console.log("llm", 1);
+
     options = options || {};
+
+    console.log("llm", 2);
 
     //
     // Constants
@@ -41,10 +45,15 @@
         colorPickerTemplate = "<div class=\"color-picker-panel\" style=\"display:none;position:absolute;\">" + colors.map(function(c) {return "<div class=\"color\" style=\"background-color:"+c+";\"></div>"}).join("") + "</div>",
         i, dragConfig, oldParent, dropConfig, orderCache, inputFormNode;
 
+        console.log("llm", 3);
+
     //
     // Add a default class name
     //
+    console.log(rootNode.classList);
     rootNode.classList.add("legend-layer-menu");
+
+    console.log("llm", 4);
 
     dragConfig = {
 
@@ -209,6 +218,8 @@
       return defaultColor;
 
     }
+
+    console.log("llm",5);
 
     //
     // Emits the orderChanged event
@@ -618,11 +629,18 @@
       var input   = document.createElement("input"),
           isSupported;
 
+      console.log("llm",7);
+
       //
       // Test for native color picker support
       // Test inspired by https://bgrins.github.io/spectrum/
       //
-      input.type  = "color";
+      try {
+        input.type  = "color";
+      } catch (err) {
+        input.type  = "text";
+      }
+      console.log("llm",8);
       input.value = "!";
       isSupported = (input.type === "color" && input.type !== "!");
 
@@ -789,7 +807,11 @@
     // Here we go
     //
 
+    console.log("llm",6);
+
     initColorPicker();
+
+    console.log("llm",7);
     init();
 
     return that;
