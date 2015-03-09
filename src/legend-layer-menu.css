@@ -6,7 +6,8 @@
   width: 270px;
   padding: 10px;
   background-color: #fff;
-  box-sizing: border-box; }
+  box-sizing: border-box;
+  /* a fix for layering in FireFox */ }
   .legend-layer-menu h2 {
     position: relative;
     font-size: 125%;
@@ -104,5 +105,7 @@
       height: 20px;
       float: left;
       cursor: pointer; }
+  .legend-layer-menu.prompting .draggable {
+    z-index: 0; }
 
 /*# sourceMappingURL=legend-layer-menu.css.map */

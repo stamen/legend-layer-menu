@@ -156,4 +156,11 @@
     }
   }
 
+  /* a fix for layering in FireFox: https://github.com/stamen/ecoengine/issues/133 */
+  &.prompting {
+    .draggable {
+      z-index:0;
+    }
+  }
+
 }
