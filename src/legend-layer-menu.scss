@@ -156,6 +156,18 @@
     }
   }
 
+  .draggable {
+    .error {
+      color: #00b4e4;
+      font-size: 75%;
+      border: solid 1px #00b4e4;
+      padding: 2px 5px;
+      margin-left: 5px;
+      line-height: 1.4em;
+      display:none;
+    }
+  }
+
   /* a fix for layering in FireFox: https://github.com/stamen/ecoengine/issues/133 */
   &.prompting {
     .draggable {
