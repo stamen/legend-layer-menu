@@ -622,6 +622,19 @@
       });
     }
 
+    function getDropdownState() {
+      var dropdowns = rootNode.querySelectorAll("select"),
+          state     = {};
+
+      for (var i=0; dropdowns.length > i; i++) {
+
+        state[dropdowns[i].id] = dropdowns[i].value;
+
+      }
+
+      return state;
+    }
+
     function onClickLayerAddAction (e) {
       promptUserForLayerData(e.target, function() {
         var formNode     = e.target.parentNode.querySelector("form"),
@@ -716,7 +729,7 @@
       var layerGroupNodes = rootNode.querySelectorAll("ul"),
           actionNodes     = document.querySelectorAll("h2 button"),
           rasterLayers    = rootNode.querySelectorAll("select"),
-          layerName;
+          layerName, dropdown;
 
       //
       // Iterate through unordered list elements in the root
@@ -745,6 +758,19 @@
           createLayer(layerObject);
 
         });
+      }
+
+      //
+      // Dropdown state
+      //
+      if (options.dropdownState) {
+        for (var i in options.dropdownState) {
+          if (options.dropdownState.hasOwnProperty(i)) {
+            dropdown = rootNode.querySelector("#" + i);
+
+            dropdown.value = options.dropdownState[i];
+          }
+        }
       }
 
       //
@@ -817,6 +843,7 @@
     that.getLayerOrder       = getLayerOrder;
     that.rootNode            = rootNode;
     that.getMenuState        = getMenuState;
+    that.getDropdownState    = getDropdownState;
     that.disableMenuItemById = disableMenuItemById;
     that.enableMenuItemById  = enableMenuItemById;
     that.showLayerError      = showLayerError;
